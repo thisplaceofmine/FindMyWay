@@ -1,0 +1,19 @@
+{
+  "name": "findmyway",
+  "version": "1.0.0",
+  "description": "Help you find your way",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon backend/index.js ",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gary",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.0.2",
+    "cookie-session": "^1.4.0",
+    "nodemon": "^2.0.2"
+  }
+}

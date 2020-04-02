@@ -1,0 +1,91 @@
+[
+  {
+    "TypeNameCN": "社會福利",
+    "TypeNameEN": "Community and Social Welfare",
+    "Features": [
+      {
+        "NameCN": "嚴重殘疾人士護理院",
+        "NameEN": "Care and Attention Home for Severely Disabled Persons",
+        "id": "c3150960-1e04-478e-9b11-41c2d488d48f"
+      },
+      {
+        "NameCN": "盲人護理安老院",
+        "NameEN": "Care and Attention Home for the Aged Blind",
+        "id": "1ef0ed6d-80db-4988-8163-6397b1ff771b"
+      },
+      {
+        "NameCN": "幼兒中心",
+        "NameEN": "Child Care Centre",
+        "id": "2cbe89f7-b959-4259-97c6-1610e7a2d9d1"
+      }
+    ]
+  },
+  {
+    "TypeNameCN": "教育",
+    "TypeNameEN": "Education",
+    "Features": [
+      {
+        "NameCN": "資助小學",
+        "NameEN": "Aided Primary Schools",
+        "id": "41f53d43-7d82-4e44-9a9e-d4e9d1c4781c"
+      },
+      {
+        "NameCN": "資助中學",
+        "NameEN": "Aided Secondary Schools",
+        "id": "b545518d-efe1-446d-8525-530b23047aba"
+      },
+      {
+        "NameCN": "官立小學",
+        "NameEN": "Government Primary Schools",
+        "id": "e55b1a7d-e52e-4f1a-903f-ab2edb93ebbb"
+      },
+      {
+        "NameCN": "國際學校（小學）",
+        "NameEN": "International Schools (Primary)",
+        "id": "c64e5114-a331-4f5d-af74-06bc71694225"
+      },
+      {
+        "NameCN": "國際學校（中學）",
+        "NameEN": "International Schools (Secondary)",
+        "id": "b819c93e-d17b-46b9-8b30-03302c7f77b9"
+      }
+    ]
+  },
+  {
+    "TypeNameCN": "環境",
+    "TypeNameEN": "Environment",
+    "Features": [
+      {
+        "NameCN": "香港空氣質素監測網絡",
+        "NameEN": "Air Quality Monitoring Network of Hong Kong",
+        "id": "f94ad59d-a970-407a-abc6-8e5877f7efb0"
+      },
+      {
+        "NameCN": "郊野公園",
+        "NameEN": "Country Parks",
+        "id": "6bbc334b-cdb1-48ce-8a78-c58979327124"
+      }
+    ]
+  },
+  {
+    "TypeNameCN": "政府",
+    "TypeNameEN": "Government",
+    "Features": [
+      {
+        "NameCN": "出生及死亡登記處",
+        "NameEN": "Births and Deaths Registries",
+        "id": "f2a15891-25cd-454c-b032-619182c827d8"
+      },
+      {
+        "NameCN": "派遞局",
+        "NameEN": "Delivery Offices",
+        "id": "ebb49e65-1c67-41a1-b45a-2f14ebabeb85"
+      },
+      {
+        "NameCN": "婚姻登記處",
+        "NameEN": "Marriage Registries",
+        "id": "0841507d-ffb6-4f61-94e3-e30abec1c7b5"
+      }
+    ]
+  }
+]
