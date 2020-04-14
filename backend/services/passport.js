@@ -1,7 +1,7 @@
 const passport = require('passport');
 const googleStragategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
-
+const jwt = require('jsonwebtoken');
 const User = mongoose.model('users');
 
 passport.serializeUser((user, done) => {
@@ -9,7 +9,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
+  User.findById(id).then((user) => {
     done(null, user);
   });
 });
@@ -20,10 +20,9 @@ passport.use(
       clientID: process.env.googleClientID,
       clientSecret: process.env.googleClientSecret,
       callbackURL: './auth/google/callback',
-      proxy: true
+      proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
       const existingUser = await User.findOne({ googleid: profile.id });
 
       if (existingUser) {
@@ -31,18 +30,21 @@ passport.use(
         return done(null, existingUser);
       }
       console.log('new user');
+      
       const user = new User({
         googleid: profile.id,
+        email: profile.emails[0].value,
         name: {
           familyName: profile.name.familyName,
-          givenName: profile.name.givenName
+          givenName: profile.name.givenName,
         },
         profilePic: profile.photos[0].value || '',
         pinlist: [],
-        status: 0
+        status: 0,
       });
       await user.save();
       done(null, user);
     }
   )
 );
+

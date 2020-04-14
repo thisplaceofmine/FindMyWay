@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
 require('./models/users');
@@ -13,7 +14,7 @@ const app = express();
 
 app.use(
   cookieSession({
-    maxAge: 1000 * 60 * 60,
+    maxAge: 1000 * 60 * 60 * 24,
     keys: [
       process.env.cookieKey_1,
       process.env.cookieKey_2,
@@ -44,6 +45,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes')(app);
+
+jwt.sign(
+  { foo: 'bar' },
+  process.env.jwtSecretKey,
+  {
+    algorithm: 'RS256',
+  },
+  (err, token) => {console.log(token)}
+);
+
 
 const port = process.env.PORT || 5000;
 

@@ -3,40 +3,47 @@ import {
   useLoadScript,
   GoogleMap,
   Marker,
-  InfoWindow
+  InfoWindow,
 } from '@react-google-maps/api';
-import { NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import {
+  NavDropdown,
+  Navbar,
+  Nav,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty, remove } from 'lodash';
 
-import { fetchQuery } from '../../actions';
+import { fetchQuery, updateUserFav } from '../../actions';
 import POIDataList from './data.json';
 
-const Map = props => {
+const Map = () => {
   //  Inital state setup
   const initalQuery = '';
-  // '2cbe89f7-b959-4259-97c6-1610e7a2d9d1';
   const [query, setQuery] = useState(initalQuery);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [infoOpen, setinfoOpen] = useState(false);
   const [queryData, setQueryData] = useState({});
-  const [userFavourite, setUserFavourite] = useState({"features": []});
+  const [userFavourite, setUserFavourite] = useState({ features: [] });
+  const [errorHandle, setErrorHandle] = useState({});
 
   // Google map config
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API,
   });
 
   // Extract data from Redux store
-  const storedata = useSelector(state => ({ query: state.query }));
+  const storedata = useSelector((state) => ({
+    query: state.query,
+    user: state.user,
+    token: state.token,
+  }));
 
   //  Fetching data from external api by action
   const dispatch = useDispatch();
   useEffect(() => {
     if (query === initalQuery) {
-      selectedPlace === null || setSelectedPlace(null);
-      infoOpen === true || setinfoOpen(false);
-      queryData === {} || setQueryData({});
       return;
     } else {
       dispatch(fetchQuery(query));
@@ -47,17 +54,30 @@ const Map = props => {
     setQueryData(storedata.query);
   }, [storedata.query]);
 
+  useEffect(() => {
+    if (!storedata.user || storedata.user.pinlist === userFavourite.features) {
+      return;
+    } else {
+      setUserFavourite({ features: storedata.user.pinlist });
+    }
+    // console.log(userFavourite);
+  }, [storedata.user]);
+
   //  Rendering and mapping the Google Map Marker
-  const renderPOIMarker = queryArray => {
+  const renderPOIMarker = (queryArray) => {
     return queryArray.map((data, i) => {
       const position = {
         lat: data.geometry.coordinates[1],
-        lng: data.geometry.coordinates[0]
+        lng: data.geometry.coordinates[0],
       };
       return (
         <Marker
           onClick={() => {
-            markerClickHandler(data);
+            setSelectedPlace(data);
+            if (infoOpen) {
+              setinfoOpen(false);
+            }
+            setinfoOpen(true);
           }}
           key={i}
           position={position}
@@ -66,17 +86,8 @@ const Map = props => {
     });
   };
 
-  // Handling when the marker was clicked
-  const markerClickHandler = data => {
-    setSelectedPlace(data);
-    if (infoOpen) {
-      setinfoOpen(false);
-    }
-    setinfoOpen(true);
-  };
-
   // Rendering Point of interest
-  const renderPOI = datalist => {
+  const renderPOI = (datalist) => {
     return (
       <Navbar bg='dark' variant='dark' id='Point of interest'>
         <Nav justify className='mr-auto '>
@@ -104,52 +115,100 @@ const Map = props => {
               );
             })}
           </div>
-          <button
-            type='button'
-            className='btn btn-sm btn-outline-danger '
-            onClick={() => {
-              setQuery(initalQuery);
-            }}
-          >
-            Reset
-          </button>
+          <div className='btn-group' role='Toolbar button group'>
+            <button
+              className='btn btn-sm btn-outline-light'
+              onClick={() => {
+                setQueryData(userFavourite);
+              }}
+            >
+              {' '}
+              My favourite
+            </button>
+            <button
+              type='button'
+              className='btn btn-sm btn-outline-danger '
+              onClick={() => {
+                setQuery(initalQuery);
+              }}
+            >
+              Reset
+            </button>
+          </div>
         </Nav>
       </Navbar>
     );
   };
 
   // Help render the infoBox website field
-  const websiteRenderHelper = website => {
+  const websiteRenderHelper = (website) => {
     if (website === 'N.A.') {
       return website;
     } else {
       return (
-        <a href={website} target='_blank'>
+        <a href={website} target='_blank' rel='noopener noreferrer'>
           {website}
         </a>
       );
     }
   };
 
-  const renderUserFavourite = place => {
-    const result = userFavourite.features.filter(data => {
-      return data.properties['Facility Name'] === place.properties['Facility Name'];
-    });
-    const tempArray = [...userFavourite.features, place];
-    const tempArray2 = remove([...userFavourite.features], data => {
-      return data.properties['Facility Name'] === place.properties;
-    });
-
-    if (result.length === 0) {
+  const renderUserFavourite = (place) => {
+    if (!storedata.user) {
       return (
-        <ion-icon
-          name='heart-outline'
-          size='small'
-          onClick={() => setUserFavourite({'features':tempArray})}
-        />
+        <OverlayTrigger
+          placement='bottom'
+          delay={{ show: 150, hide: 500 }}
+          overlay={(props) => {
+            return (
+              <Tooltip id='Favourite-Popup' {...props}>
+                You must login to save favourite.
+              </Tooltip>
+            );
+          }}
+        >
+          <ion-icon name='heart-outline' size='small' />
+        </OverlayTrigger>
       );
     } else {
-      return <ion-icon name='heart' size='small' onClick={() => {setUserFavourite({'features':tempArray2})}} />;
+      const result = userFavourite.features.filter((data) => {
+        return (
+          data.properties['Facility Name'] === place.properties['Facility Name']
+        );
+      });
+
+      if (result.length === 0) {
+        const tempArray = [...userFavourite.features, place];
+        return (
+          <ion-icon
+            name='heart-outline'
+            size='small'
+            onClick={() =>
+              dispatch(
+                updateUserFav(tempArray, setErrorHandle, storedata.token)
+              )
+            }
+          />
+        );
+      } else {
+        const tempArray2 = userFavourite.features.filter((data) => {
+          return (
+            data.properties['Facility Name'] !==
+            place.properties['Facility Name']
+          );
+        });
+        return (
+          <ion-icon
+            name='heart'
+            size='small'
+            onClick={() => {
+              dispatch(
+                updateUserFav(tempArray2, setErrorHandle, storedata.token)
+              );
+            }}
+          />
+        );
+      }
     }
   };
 
@@ -157,23 +216,33 @@ const Map = props => {
     return (
       <div className='container'>
         <h3 className='mx-auto  text-center my-2 '>Simple map</h3>
-        <div><button className="btn" onClick={()=>{setQueryData(userFavourite)}}> Debug</button></div>
+        <div>
+          <button
+            className='btn btm-sm'
+            onClick={() => {
+              console.log(userFavourite);
+            }}
+          >
+            Debug
+          </button>
+        </div>
         <div>{renderPOI(POIDataList)}</div>
         <GoogleMap
           id='circle-example'
           mapContainerStyle={{
             height: '75vh',
-            width: '100%'
+            width: '100%',
           }}
           zoom={11}
           center={{ lat: 22.396427, lng: 114.109497 }}
+          onClick={() => setinfoOpen(false)}
         >
           {!isEmpty(queryData.features) && renderPOIMarker(queryData.features)}
           {infoOpen && selectedPlace && (
             <InfoWindow
               position={{
                 lat: selectedPlace.geometry.coordinates[1],
-                lng: selectedPlace.geometry.coordinates[0]
+                lng: selectedPlace.geometry.coordinates[0],
               }}
               onCloseClick={() => {
                 setinfoOpen(false);
@@ -181,7 +250,7 @@ const Map = props => {
             >
               <div>
                 <h6>
-                  {selectedPlace.properties['Facility Name']}
+                  {selectedPlace.properties['Facility Name']}{' '}
                   {renderUserFavourite(selectedPlace)}
                 </h6>
                 <ul

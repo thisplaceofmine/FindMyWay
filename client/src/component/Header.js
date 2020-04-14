@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { isNull } from 'lodash';
+import { isNull, isUndefined } from 'lodash';
 import { Nav, Navbar, Dropdown } from 'react-bootstrap';
 
 import { fetchUser } from '../actions';
 
-const Header = props => {
+const Header = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUser());
   }, []);
 
-  const storedata = useSelector(state => ({
-    user: state.user
+  const storedata = useSelector((state) => ({
+    user: state.user,
   }));
 
   const initialList = [
     { active: false, direction: '/', name: 'Home' },
-    { active: false, direction: '/login', name: 'Login' },
-    { active: false, direction: '/map', name: 'Map' }
+    { active: false, direction: '/user', name: 'User' },
+    { active: false, direction: '/map', name: 'Map' },
   ];
 
   const [list, setList] = useState(initialList);
 
-  const handleHeaderclick = e => {
+  const handleHeaderclick = (e) => {
     let value = Number(e.currentTarget.getAttribute('value'));
     let tempArray = [...list];
-    tempArray.forEach(e => (e.active = false));
+    tempArray.forEach((e) => (e.active = false));
     tempArray[value].active = true;
     setList(tempArray);
   };
@@ -46,7 +46,10 @@ const Header = props => {
           return (
             <Dropdown>
               <Dropdown.Toggle>
-                Welcome back {storedata.user.name.givenName}
+                Welcome back{' '}
+                {isUndefined(storedata.user.name.givenName)
+                  ? storedata.user.email
+                  : storedata.user.name.givenName}
               </Dropdown.Toggle>
               <Dropdown.Menu className='dropdown-menu-right'>
                 <Dropdown.Item href='/user'>User</Dropdown.Item>
