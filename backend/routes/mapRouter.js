@@ -16,7 +16,7 @@ router.route('/').get(async (req, res) => {
 
 router.route('/').post(verifyToken, async (req, res) => {
   try {
-    console.log('Trigger');
+    // console.log('Trigger');
     let reqDataList = [];
     let temp = await UserModel.findOne({ googleid: req.locals.user.googleid });
 
@@ -45,7 +45,7 @@ router.route('/').post(verifyToken, async (req, res) => {
 
     temp.pinlist = reqDataList;
     await temp.save();
-    console.log(temp)
+    // console.log(temp)
     res.status(200).json(temp)
   } catch (err) {
     console.log('Trigger 2');

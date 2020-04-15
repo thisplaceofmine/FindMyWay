@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty, remove } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { fetchQuery, updateUserFav } from '../../actions';
 import POIDataList from './data.json';
@@ -26,7 +26,6 @@ const Map = () => {
   const [infoOpen, setinfoOpen] = useState(false);
   const [queryData, setQueryData] = useState({});
   const [userFavourite, setUserFavourite] = useState({ features: [] });
-  const [errorHandle, setErrorHandle] = useState({});
 
   // Google map config
   const { isLoaded } = useLoadScript({
@@ -185,7 +184,7 @@ const Map = () => {
             size='small'
             onClick={() =>
               dispatch(
-                updateUserFav(tempArray, setErrorHandle, storedata.token)
+                updateUserFav(tempArray,  storedata.token)
               )
             }
           />
@@ -203,7 +202,7 @@ const Map = () => {
             size='small'
             onClick={() => {
               dispatch(
-                updateUserFav(tempArray2, setErrorHandle, storedata.token)
+                updateUserFav(tempArray2, storedata.token)
               );
             }}
           />
@@ -217,14 +216,14 @@ const Map = () => {
       <div className='container'>
         <h3 className='mx-auto  text-center my-2 '>Simple map</h3>
         <div>
-          <button
+          {/* <button
             className='btn btm-sm'
             onClick={() => {
               console.log(userFavourite);
             }}
           >
             Debug
-          </button>
+          </button> */}
         </div>
         <div>{renderPOI(POIDataList)}</div>
         <GoogleMap

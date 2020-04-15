@@ -53,3 +53,14 @@ export const updateUserFav = (userFav, errCB, token) => async (dispatch) => {
     }
   }
 };
+
+export const updateUserInfo = (userInfo, token)=> async dispatch=>{
+  try{
+    const res = await server.post('/user', userInfo, {headers:{authorization: `Bearer ${token}`}})
+    const decodeData = jwt.decode(res.data);
+    dispatch({ type: FETCH_USER, payload: decodeData.user });
+    dispatch({ type: HANDLE_TOKEN, payload: res.data }); 
+  } catch(err){
+    console.log(err)
+  }
+}
