@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  // console.log('Trigger Token Middleware');
-  
+  console.log('Trigger Token Middleware');
+  console.log(req.headers)
   // Is there even a token
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== 'undefined') {

@@ -13,9 +13,9 @@ import {
 export const fetchUser = () => async (dispatch) => {
   try {
     const res = await axios.get('/auth/google/current_user');
-    const decodeData = jwt.decode(res.data);
-    dispatch({ type: FETCH_USER, payload: decodeData.user });
-    dispatch({ type: HANDLE_TOKEN, payload: res.data });
+    console.log(res)
+    dispatch({ type: FETCH_USER, payload: res.data.user });
+    dispatch({ type: HANDLE_TOKEN, payload: res.data.token });
   } catch (error) {
     console.log(error);
   }
@@ -33,10 +33,10 @@ export const fetchQuery = (id) => async (dispatch) => {
   }
 };
 
-export const updateUserFav = (userFav, errCB, token) => async (dispatch) => {
+export const updateUserFav = (userFav, token) => async (dispatch) => {
   // console.log({"action ": userFav});
   try {
-    const res = await server.post('/map', userFav, {
+    const res = await axios.post('/map', userFav, {
       headers: { authorization: `Bearer ${token}` },
     });
     // console.log(res);
@@ -45,8 +45,7 @@ export const updateUserFav = (userFav, errCB, token) => async (dispatch) => {
     console.log(error.response);
     if (error.response.status === 401 || error.response.status === 403) {
       console.log(error.response.data);
-      dispatch({type: ERR_USER_MISSING})
-      return errCB(error.response.data);
+      dispatch({ type: ERR_USER_MISSING });
     } else {
       console.log(error.response);
       console.log(error.request);
@@ -54,13 +53,15 @@ export const updateUserFav = (userFav, errCB, token) => async (dispatch) => {
   }
 };
 
-export const updateUserInfo = (userInfo, token)=> async dispatch=>{
-  try{
-    const res = await server.post('/user', userInfo, {headers:{authorization: `Bearer ${token}`}})
+export const updateUserInfo = (userInfo, token) => async (dispatch) => {
+  try {
+    const res = await axios.post('/user', userInfo, {
+      headers: { authorization: `Bearer ${token}` },
+    });
     const decodeData = jwt.decode(res.data);
     dispatch({ type: FETCH_USER, payload: decodeData.user });
-    dispatch({ type: HANDLE_TOKEN, payload: res.data }); 
-  } catch(err){
-    console.log(err)
+    dispatch({ type: HANDLE_TOKEN, payload: res.data });
+  } catch (err) {
+    console.log(err);
   }
-}
+};

@@ -1,6 +1,6 @@
 const passport = require('passport');
 const router = require('express').Router();
-const signUserJWT = require('../services/signUserJWT')
+const signUserJWT = require('../services/signUserJWT');
 
 router
   .route('/')
@@ -21,10 +21,17 @@ router.route('/logout').get((req, res) => {
 });
 
 router.route('/current_user').get((req, res) => {
-  const token = signUserJWT(req.user)
+  let data = {};
+  const token = signUserJWT(req.user);
+  if (req.user === undefined) {
+    data = { user: false, token };
+  } else {
+    data = { user: req.user, token };
+  }
 
   try {
-    res.status(200).json(token);
+    console.log(data);
+    res.status(200).json(data);
   } catch (err) {
     console.log(err);
     res.status(500).json('Error ' + err);

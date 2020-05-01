@@ -5,7 +5,9 @@ module.exports = (user) => {
     expiresIn: '1d',
     issuer: 'This place of mine',
     subject: 'https://github.com/thisplaceofmine/FindMyWay',
-    audience: 'http://localhost:5000/',
   };
-  return jwt.sign({ user }, process.env.jwtSecretKey, signOption);
+  let userData = user ;
+  userData.pinlist === undefined ? {} : (userData.pinlist = []);
+  console.log(userData)
+  return jwt.sign({ userData }, process.env.jwtSecretKey, signOption);
 };
