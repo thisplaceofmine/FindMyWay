@@ -5,12 +5,14 @@ import { isNull, isUndefined } from 'lodash';
 import { Nav, Navbar, Dropdown } from 'react-bootstrap';
 
 import { fetchUser } from '../actions';
+import history from './History';
 
 const Header = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUser());
+    // eslint-disable-next-line
   }, []);
 
   const storedata = useSelector((state) => ({
@@ -19,8 +21,8 @@ const Header = (props) => {
 
   const initialList = [
     { active: false, direction: '/', name: 'Home' },
-    { active: false, direction: '/user', name: 'User' },
-    { active: false, direction: '/map', name: 'Map' },
+    { active: false, direction: '/users', name: 'User' },
+    { active: false, direction: '/maps', name: 'Map' },
   ];
 
   const [list, setList] = useState(initialList);
@@ -39,7 +41,7 @@ const Header = (props) => {
         case false:
           return (
             <div className='button'>
-              <a href='/auth/google'>Login with googole</a>
+              <a href='/auth/google'>Login with google</a>
             </div>
           );
         default:
@@ -52,7 +54,13 @@ const Header = (props) => {
                   : storedata.user.name.givenName}
               </Dropdown.Toggle>
               <Dropdown.Menu className='dropdown-menu-right'>
-                <Dropdown.Item href='/user'>User</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    history.push('/users');
+                  }}
+                >
+                  User
+                </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item href='/auth/google/logout'>Logout</Dropdown.Item>
               </Dropdown.Menu>

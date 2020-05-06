@@ -4,16 +4,26 @@
   "description": "Help you find your way",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon backend/index.js ",
+    "start": "node index.js",
+    "server": "nodemon index.js ",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Gary",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^5.0.2",
     "cookie-session": "^1.4.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.8.19",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.7",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0"
   }
 }

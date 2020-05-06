@@ -8,3 +8,6 @@ export const FETCH_MAP_QUERY = 'FETCH_MAP_QUERY';
 export const HANDLE_TOKEN = 'HANDLE_TOKEN';
 
 export const ERR_USER_MISSING = 'ERR_USER_MISSING';
+
+export const ERR_REDIRECT = 'ERR_REDIRECT';
+export const ERR_REDIRECT_RESET = 'ERR_REDIRECT_RESET';

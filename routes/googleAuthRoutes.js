@@ -20,22 +20,20 @@ router.route('/logout').get((req, res) => {
   }
 });
 
-router.route('/current_user').get((req, res) => {
-  let data = {};
-  const token = signUserJWT(req.user);
-  if (req.user === undefined) {
-    data = { user: false, token };
-  } else {
-    data = { user: req.user, token };
-  }
-
+router.route('/current_user').get(async (req, res) => {
   try {
-    console.log(data);
-    res.status(200).json(data);
+    if (req.user === undefined) {
+      const token = signUserJWT({});
+      res.status(200).json({ data: false, token });
+    } else {
+      const token = signUserJWT(req.user.googleid);
+      res.status(200).json({ data: req.user, token });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json('Error ' + err);
   }
 });
+
 
 module.exports = router;

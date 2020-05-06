@@ -47,6 +47,7 @@ const Map = () => {
     } else {
       dispatch(fetchQuery(query));
     }
+    // eslint-disable-next-line
   }, [query]);
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const Map = () => {
     } else {
       setUserFavourite({ features: storedata.user.pinlist });
     }
-    // console.log(userFavourite);
+    // eslint-disable-next-line
   }, [storedata.user]);
 
   //  Rendering and mapping the Google Map Marker
@@ -88,7 +89,7 @@ const Map = () => {
   // Rendering Point of interest
   const renderPOI = (datalist) => {
     return (
-      <Navbar bg='dark' variant='dark' id='Point of interest'>
+      <Navbar bg='dark' variant='dark' id='Point of interest' >
         <Nav justify className='mr-auto '>
           <div className='collapse navbar-collapse'>
             {datalist.map((parentData, i) => {
@@ -183,9 +184,7 @@ const Map = () => {
             name='heart-outline'
             size='small'
             onClick={() =>
-              dispatch(
-                updateUserFav(tempArray,  storedata.token)
-              )
+              dispatch(updateUserFav(tempArray, storedata.token, '/maps'))
             }
           />
         );
@@ -201,9 +200,7 @@ const Map = () => {
             name='heart'
             size='small'
             onClick={() => {
-              dispatch(
-                updateUserFav(tempArray2, storedata.token)
-              );
+              dispatch(updateUserFav(tempArray2, storedata.token, '/maps'));
             }}
           />
         );

@@ -6,8 +6,6 @@ module.exports = (user) => {
     issuer: 'This place of mine',
     subject: 'https://github.com/thisplaceofmine/FindMyWay',
   };
-  let userData = user ;
-  userData.pinlist === undefined ? {} : (userData.pinlist = []);
-  console.log(userData)
-  return jwt.sign({ userData }, process.env.jwtSecretKey, signOption);
+  
+  return jwt.sign({ user }, process.env.jwtSecretKey, signOption);
 };

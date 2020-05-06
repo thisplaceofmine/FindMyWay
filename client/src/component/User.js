@@ -19,13 +19,15 @@ const UserInfoPage = (props) => {
   }, [storedata.user]);
 
   const handleFormSubmit = () => {
-    dispatch(updateUserInfo(user, storedata.token));
+    dispatch(updateUserInfo(user, storedata.token, '/users'));
   };
+
+
 
   const userinfo = () => {
     return (
       <div className='container-fluid my-auto'>
-        <h2 className='text-center my-6'> PlaceHolder Header</h2>
+        <h2 className='text-center my-1'> PlaceHolder Header</h2>
         {/* <button
           className='btn btn-danger'
           onClick={() => {

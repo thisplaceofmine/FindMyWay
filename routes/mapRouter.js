@@ -1,9 +1,7 @@
 const router = require('express').Router();
 
-
 const UserModel = require('../models/users');
 const verifyToken = require('../middlewares/verifyToken');
-
 
 router.route('/').get(async (req, res) => {
   try {
@@ -18,8 +16,8 @@ router.route('/').post(verifyToken, async (req, res) => {
   try {
     // console.log('Trigger');
     let reqDataList = [];
-    let temp = await UserModel.findOne({ googleid: req.locals.user.googleid });
-
+    let temp = await UserModel.findOne({ googleid: req.locals.user });
+    // console.log(temp);
     for (var key in req.body) {
       if (req.body.hasOwnProperty(key)) {
         item = req.body[key];
@@ -46,9 +44,9 @@ router.route('/').post(verifyToken, async (req, res) => {
     temp.pinlist = reqDataList;
     await temp.save();
     // console.log(temp)
-    res.status(200).json(temp)
+    res.status(200).json(temp);
   } catch (err) {
-    console.log('Trigger 2');
+    // console.log('Trigger 2');
     console.log(err);
     res.status(500).json('Error: ' + err);
   }
